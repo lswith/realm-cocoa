@@ -7,7 +7,10 @@ x.x.x Release notes (yyyy-MM-dd)
 
 ### Enhancements
 
-* None.
+* Add `-[RLMSyncUser changePassword:forUserID:completion:]` API to change an
+  arbitrary user's password if the current user has administrative privileges
+  and using Realm's 'password' authentication provider.
+  Requires any edition of the Realm Object Server 1.6.0 or later.
 
 ### Bugfixes
 
