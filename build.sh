@@ -379,6 +379,29 @@ download_sync() {
 }
 
 ######################################
+# Simulating Poor Network Connectivity
+######################################
+enable_bandwidth_throttling() {
+    # run inside sudo
+    sudo sh <<SCRIPT
+        # Bandwidth: 780 kbps, Packets Dropped: 0%, Delay: 100 ms
+        # same setting as 3G preset of Network Link Conditioner
+        dnctl pipe 1 config bw 780Kbit/s plr 0 delay 100
+        echo "dummynet out proto tcp from 127.0.0.1 to 127.0.0.1 pipe 1" | pfctl -f -
+        pfctl -e
+SCRIPT
+}
+
+disable_bandwidth_throttling() {
+    # run inside sudo
+    sudo sh <<SCRIPT
+        dnctl -f flush
+        pfctl -f /etc/pf.conf
+        pfctl -d
+SCRIPT
+}
+
+######################################
 # Variables
 ######################################
 
@@ -855,6 +878,19 @@ case "$COMMAND" in
         sh build.sh reset-object-server
         exit 0
         ;;
+    "veryfy-osx-object-server-3G-network")
+      sh build.sh download-object-server
+
+      # clear any previous sudo permission
+      sudo -k
+      enable_bandwidth_throttling
+      trap 'disable_bandwidth_throttling' EXIT ERR SIGINT
+
+      sh build.sh test-osx-object-server
+      sh build.sh reset-object-server
+
+      exit 0
+      ;;
 
     ######################################
     # Docs
