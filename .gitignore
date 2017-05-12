@@ -44,7 +44,7 @@ bin
 # sh build.sh docs
 /docs/objc_output
 /docs/swift_output
-/Realm/RLMPlatform.h
+#/Realm/RLMPlatform.h
 
 # XCode
 *.bak
@@ -104,6 +104,6 @@ Cartfile
 Carthage
 
 ## Swift Version
-SwiftVersion.swift
+#SwiftVersion.swift
 
 examples/ios/objc/Draw/Constants.h
